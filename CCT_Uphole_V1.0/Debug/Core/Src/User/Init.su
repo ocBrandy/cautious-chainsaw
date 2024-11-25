@@ -1,0 +1,7 @@
+../Core/Src/User/Init.c:9:6:init	8	static
+../Core/Src/User/Init.c:22:6:SystemClock_Config	72	static
+../Core/Src/User/Init.c:52:6:MX_IWDG_Init	8	static
+../Core/Src/User/Init.c:63:6:IWDG_FEED_DOG	8	static
+../Core/Src/User/Init.c:70:10:Checksum_Reverse	224	static
+../Core/Src/User/Init.c:87:10:Checksum_sum	24	static
+../Core/Src/User/Init.c:97:6:Error_Handler	4	static,ignoring_inline_asm
