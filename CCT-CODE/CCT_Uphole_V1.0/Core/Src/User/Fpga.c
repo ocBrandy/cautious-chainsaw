@@ -344,7 +344,7 @@ void Write_Fir_Parameter(void)
 		else
 			init_cn = 10;
 	}
-//
+
 //	comSendChar(COM1,(sum1 >> 8));
 //	comSendChar(COM1,sum1);
 //
