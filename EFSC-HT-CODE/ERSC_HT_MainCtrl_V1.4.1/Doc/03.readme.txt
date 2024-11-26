@@ -1,0 +1,28 @@
+F103ZET6工程模板
+CPU型号        : STM32F103ZET6 / LQFP-144 / ARM 32-bit Cortex-M3
+主频           : 72MHz
+内部Flash容量  : 512KB
+内部SRAM容量   : 64KB
+板载资源	   ：2个LED，N25Q128A，AT24C32,SD卡槽
+接口		   ：串口转USB，micro-usb，SD卡，spi接口OLED，8080并口的MCU屏接口
+
+
+2019/8/7：
+V1.1
+更新内容：
+1.fatfs添加SD卡和spi flash，可同时挂载2个盘
+2.修复了SD卡获取容量不对的问题，原因是bsp_sdio_sd.h下的SD_CSD结构体成员__IO uint32_t DeviceSize是32位的
+，32位变量最大0xFFFFFFFF,最大只能支持4G的SD卡，将变量类型修改为64位，SD_CardInfo结构体的uint64_t CardCapacity也修改成64位
+目前问题：单次读写SD卡大小设置成1024或以上，会出错。
+(已解决：原因是F1的DMA数据收发必须是4字节对齐造成的，F4的话DMA可以设置非4字节对齐，也就是字节传输，所以F4无此问题，传输大数据的话，多次512字节传输即可)
+具体可看帖子http://www.armbbs.cn/forum.php?mod=viewthread&tid=11880&fromuid=58
+解决了该问题！！！（diskio.c下的disk_write内SD卡读写完成等待，错误写成了SD_WaitReadOperation读等待，修改为SD_WaitWriteOperation写等待，可解决该问题）
+
+2020/04/08：
+V1.1a
+新增：
+1.SD卡模拟U盘。
+2.添加正点原子4.3寸MCU屏驱动及测试
+3.新增跳转系统Bootloader接口，主要用于IAP更新
+注:F1的系统bootloader只支持串口1更新，串口使用的是PA9,PA10，跳转到系统BOOT后，必须保证串口1没有被其他软件占用，如当前测试是通过串口助手发字符‘6’进行跳转，跳转成功后，
+必须关闭串口助手，再打开stm32CubeProg连接，一般都能连接上；如果连接不上，换根串口线或者是把boot[1：0]接上下拉的电阻改小点试试

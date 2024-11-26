@@ -63,7 +63,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 {
 	unsigned char data,A,B,C,D,E,F,G,H;
 
-	/*-----------------------地址&片选初始化，读时为输出----------------------------*/
+	/*-----------------------地址&片选初始化，�?�时为输�?----------------------------*/
 
 	GPIO_InitStruct.Pin = ADDR0_Pin|ADDR1_Pin|ADDR2_Pin|ADDR3_Pin|MCU_CS_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -71,7 +71,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-	/*-----------------------读写初始化，读时为输出---------------------------------*/
+	/*-----------------------读写初�?�化，�?�时为输�?---------------------------------*/
 
 	GPIO_InitStruct.Pin = MCU_WR_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -79,7 +79,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	/*-----------------------数据初始化，读时为输入---------------------------------*/
+	/*-----------------------数据初�?�化，�?�时为输�?---------------------------------*/
 
 	GPIO_InitStruct.Pin = DATA1_Pin|DATA0_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -106,7 +106,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
-	HAL_GPIO_WritePin(GPIOE,MCU_WR_Pin,GPIO_PIN_RESET);			//读:WR拉低
+	HAL_GPIO_WritePin(GPIOE,MCU_WR_Pin,GPIO_PIN_RESET);			//�?:WR拉低
 
 	if(addRead & 0x08)
 		HAL_GPIO_WritePin(ADDR3_GPIO_Port,ADDR3_Pin,GPIO_PIN_SET);
@@ -116,7 +116,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	if(addRead & 0x04)
 		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_SET);
 	else
-		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_RESET);		//例:addRead = d'6/b'0110,  ADDR3=0,ADDR2=1,ADDR1=1;ADDR0=0
+		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_RESET);		//�?:addRead = d'6/b'0110,  ADDR3=0,ADDR2=1,ADDR1=1;ADDR0=0
 
 	if(addRead & 0x02)
 		HAL_GPIO_WritePin(ADDR1_GPIO_Port,ADDR1_Pin,GPIO_PIN_SET);
@@ -128,7 +128,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	else
 		HAL_GPIO_WritePin(ADDR0_GPIO_Port,ADDR0_Pin,GPIO_PIN_RESET);
 
-	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_RESET);			//片选拉低
+	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_RESET);			//片选拉�?
 
 	A = HAL_GPIO_ReadPin(DATA0_GPIO_Port,DATA0_Pin);
 	B = HAL_GPIO_ReadPin(DATA1_GPIO_Port,DATA1_Pin);
@@ -139,7 +139,7 @@ unsigned char Fpga_Read(unsigned char addRead)
 	G = HAL_GPIO_ReadPin(DATA6_GPIO_Port,DATA6_Pin);
 	H = HAL_GPIO_ReadPin(DATA7_GPIO_Port,DATA7_Pin);
 
-	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉高
+	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉�?
 
 	data =  H<<7;
 	data += G<<6;
@@ -182,7 +182,7 @@ void Fpga_Write(unsigned char addWrite,unsigned char Data)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉高
+	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉�?
 
 	/*----------------------4位地址--------------------------------*/
 	if(addWrite & 0x08)
@@ -193,7 +193,7 @@ void Fpga_Write(unsigned char addWrite,unsigned char Data)
 	if(addWrite & 0x04)
 		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_SET);
 	else
-		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_RESET);		//例:addRead = d'6/b'0110,  ADDR3=0,ADDR2=1,ADDR1=1;ADDR0=0
+		HAL_GPIO_WritePin(ADDR2_GPIO_Port,ADDR2_Pin,GPIO_PIN_RESET);		//�?:addRead = d'6/b'0110,  ADDR3=0,ADDR2=1,ADDR1=1;ADDR0=0
 
 	if(addWrite & 0x02)
 		HAL_GPIO_WritePin(ADDR1_GPIO_Port,ADDR1_Pin,GPIO_PIN_SET);
@@ -205,7 +205,7 @@ void Fpga_Write(unsigned char addWrite,unsigned char Data)
 	else
 		HAL_GPIO_WritePin(ADDR0_GPIO_Port,ADDR0_Pin,GPIO_PIN_RESET);
 
-	/*----------------------8位数据--------------------------------*/
+	/*----------------------8位数�?--------------------------------*/
 	if(Data & 0x80)
 		HAL_GPIO_WritePin(DATA7_GPIO_Port,DATA7_Pin,GPIO_PIN_SET);
 	else
@@ -246,9 +246,9 @@ void Fpga_Write(unsigned char addWrite,unsigned char Data)
 	else
 		HAL_GPIO_WritePin(DATA0_GPIO_Port,DATA0_Pin,GPIO_PIN_RESET);
 
-	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_RESET);			//片选拉低
+	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_RESET);			//片选拉�?
 
-	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉高
+	HAL_GPIO_WritePin(GPIOE,MCU_CS_Pin,GPIO_PIN_SET);			//片选拉�?
 
 
 	GPIO_InitStruct.Pin = DATA1_Pin|DATA0_Pin;
@@ -344,7 +344,7 @@ void Write_Fir_Parameter(void)
 		else
 			init_cn = 10;
 	}
-
+//
 //	comSendChar(COM1,(sum1 >> 8));
 //	comSendChar(COM1,sum1);
 //

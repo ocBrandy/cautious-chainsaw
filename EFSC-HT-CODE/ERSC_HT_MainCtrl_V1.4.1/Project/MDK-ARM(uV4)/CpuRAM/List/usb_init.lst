@@ -1,0 +1,67 @@
+L 1 "..\..\Libraries\STM32_USB-FS-Device_Driver\src\usb_init.c"
+N/**
+N  ******************************************************************************
+N  * @file    usb_init.c
+N  * @author  MCD Application Team
+N  * @version V3.4.0
+N  * @date    29-June-2012
+N  * @brief   Initialization routines & global variables
+N  ******************************************************************************
+N  * @attention
+N  *
+N  * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+N  *
+N  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+N  * You may not use this file except in compliance with the License.
+N  * You may obtain a copy of the License at:
+N  *
+N  *        http://www.st.com/software_license_agreement_liberty_v2
+N  *
+N  * Unless required by applicable law or agreed to in writing, software 
+N  * distributed under the License is distributed on an "AS IS" BASIS, 
+N  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+N  * See the License for the specific language governing permissions and
+N  * limitations under the License.
+N  *
+N  ******************************************************************************
+N  */
+N
+N
+N/* Includes ------------------------------------------------------------------*/
+N#include "usb_lib.h"
+L 1 "..\..\Libraries\STM32_USB-FS-Device_Driver\inc\usb_lib.h" 1
+N/**
+N  ******************************************************************************
+N  * @file    usb_lib.h
+N  * @author  MCD Application Team
+N  * @version V3.4.0
+N  * @date    29-June-2012
+N  * @brief   USB library include files
+N  ******************************************************************************
+N  * @attention
+N  *
+N  * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+N  *
+N  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+N  * You may not use this file except in compliance with the License.
+N  * You may obtain a copy of the License at:
+N  *
+N  *        http://www.st.com/software_license_agreement_liberty_v2
+N  *
+N  * Unless required by applicable law or agreed to in writing, software 
+N  * distributed under the License is distributed on an "AS IS" BASIS, 
+N  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+N  * See the License for the specific language governing permissions and
+N  * limitations under the License.
+N  *
+N  ******************************************************************************
+N  */
+N
+N
+N/* Define to prevent recursive inclusion -------------------------------------*/
+N#ifndef __USB_LIB_H
+N#define __USB_LIB_H
+N
+N/* Includes ------------------------------------------------------------------*/
+C "..\..\Libraries\STM32_USB-FS-Device_Driver\inc\usb_lib.h" 34 23 cannot open source input file "hw_config.h": No such file or directory
+N#include "hw_config.h"

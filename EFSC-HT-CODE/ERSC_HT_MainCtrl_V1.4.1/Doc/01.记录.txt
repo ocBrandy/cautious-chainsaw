@@ -1,0 +1,156 @@
+/*********************************************************************************************************************************************************/	
+2019/04/12:
+MPU6050移植MPL库说明：
+1.从官网下载驱动包，《motion_driver_6.12》，在工程路劲下，新增DMP文件夹，将驱动包中的
+	motion_driver_6.12\arm\STM32F4_MD6\Projects\eMD6\core 路径下的所有文件夹复制到DMP文件夹中。
+	
+2.在MDK工程下添加文件分组DMP，将DMP文件夹下的所有.c文件添加进工程中，并在MDK设置中添加相应编译
+	路径，在MDK的C/C++的预编译宏中加入USE_DMP,MPL_LOG_NDEBUG=1,EMPL,MPU6050,EMPL_TARGET_STM32F4四个宏。
+	
+3.移植MPL库主要是在inv_mpu.c中完成四个函数接口
+	i2c_write(unsigned char slave_addr, unsigned char reg_addr,
+     unsigned char length, unsigned char const *data);
+	i2c_read(unsigned char slave_addr, unsigned char reg_addr,
+      unsigned char length, unsigned char *data);
+	delay_ms(unsigned long num_ms);
+	get_ms(unsigned long *count);
+因此，在bsp_mpu6050.c中编写 MPU6050_WriteLen() 和 MPU6050_ReadLen()两个API，用于MPL库调用
+在bsp_timer.c中实现ms级延时函数 bsp_DelayMS()和 系统时间获取函数 bsp_GetRunTime2()
+最后在inv_mpu.c 和 inv_mpu_dmp_motion_driver.c中，通过宏替换，实现接口连接
+
+/*************** inv_mpu.c中的宏 ********************/
+#if defined EMPL_TARGET_STM32F4
+#include "bsp.h"
+#include "log.h"
+unsigned char *mpl_key = (unsigned char*)"eMPL 5.1";
+
+#define i2c_write   MPU6050_WriteLen
+#define i2c_read    MPU6050_ReadLen
+#define delay_ms    bsp_DelayMS
+#define get_ms      bsp_GetRunTime2
+
+/*************** inv_mpu_dmp_motion_driver.c中的宏 ********************/
+#if defined EMPL_TARGET_STM32F4
+#include "bsp.h"   
+
+#define i2c_write   MPU6050_WriteLen
+#define i2c_read    MPU6050_ReadLen
+#define get_ms      bsp_GetRunTime2
+
+到此算是移植完成，可以根据官方例程，编写MPU6050_DmpInit()和MPU6050_DmpGetData()两个函数，实现DMP初始化
+和转换数据获取等函数。
+
+4.调试记录：调试中发现，MPU6050_DmpInit()初始化时不通过，debug发现卡在 dmp_load_motion_driver_firmware();
+			无法正确加载DMP固件，这种情况一般I2C驱动有问题导致的。
+/*********************************************************************************************************************************************************/								
+2019/04/28：			
+spi_Flash调试记录
+核心主控板所用SPI_FLASH型号为N25Q128A，16M字节的容量，板子所用的接口为SPI1
+核心主控板的SPI1口线分配为
+	PA5/SPI1_SCK
+	PA6/SPI1_MISO
+	PA7/SPI1_MOSI
+	PA4/SPI1_CS
+bsp_spi_bus.c文件为SPI底层驱动，bsp_spi_flash.c为spi_flash的驱动
+demo_spi_flash.c为测试spi_flash功能的demo例程，因为文件中定义了许多大数组，工程默认的栈大小0x400不够，测试时
+会发生栈溢出导致进入HardFault_Handler，因此需要在startup_stm32f10x_cl.s启动文件中将栈修改大一点.
+/*********************************************************************************************************************************************************/	
+2019/04/29：
+移植FATFS：
+官网：http://elm-chan.org/fsw/ff/00index_e.html
+2019/4/28:
+移植FATFS R0.10b成功，demo_spiflash_fatfs.c为测试fatfs功能的demo。
+
+fatfs R0.10b移植记录：
+1.从官网下载ff10源文件，将整个源文件复制进user文件夹下。
+	ff10下有2个文件夹，doc和src;
+	doc主要存放API说明和官网链接
+	src内为fatfs源码
+2.将源文件下的src文件下的diskio.c和ff.c添加进工程中，并在MDK下添加相应的编译路径，
+如果需要长文件名和中文编码，将子目录option下的cc936.c也添加进工程中
+	diskio.c  主要提供移植的底层接口，需要在这个文件下实现读写和初始化操作等
+	ff.c  是fatfs的API实现的模块接口
+
+3.修改diskio.c实现底层接口
+  先修改磁盘编号的宏定义，如果需要添加更多设备，在此处修改好编号
+比如此处FS_SD宏定义为0，那么使用文件系统的API时，填写的磁盘编号就为"0:"
+#define FS_SD				0
+#define FS_SPIFLASH			1
+//#define FS_USB				2
+以上宏定义在diskio.h下
+
+添加头文件bsp.h，里面是底层硬件驱动的接口
+
+	disk_initialize    添加SPI_FLASH/SD卡的初始化，可以调用disk_status来检查是否初始化成功
+	disk_status        获取状态，对于spi_flash，可以在此处通过获取ID来看初始化是否成功
+	disk_read		   需要实现SPIFlash和SD卡的读扇区接口
+						uint8_t sf_ReadBuffer(uint8_t * _pBuf, uint32_t _uiReadAddr, uint32_t _uiSize);
+						来读取指定地址数据，需要注意的是，该函数的参数中的sector和count
+						由于SPI_FLASH一个扇区大小为4096字节，
+						sector是扇区号，读第1个扇区时，实际时从地址1*4096开始读取
+						count时读出扇区的数量，每个扇区4096字节，读1个扇区时，实际读字节数为1*4096
+						因此将参数带入sf_ReadBuffer时，需要对参数进行转换
+						sf_ReadBuffer(buff, sector << 12, count<<12);
+						
+	disk_write		   需要实现spiflash和SD卡的写扇区接口
+						uint8_t sf_WriteBuffer(uint8_t* _pBuf, uint32_t _uiWriteAddr, uint16_t _usWriteSize);
+						来在指定地址写入数据，和disk_read一样，需要注意的是参数sector和count
+						p = (BYTE *)buff;
+						for(i = 0; i < count; i++)
+						{
+							/* 每次写入一个扇区 */
+							sf_WriteBuffer((uint8_t *)buff, sector << 12, 4096);
+							p += 4096;					
+						}
+	disk_ioctl		   该函数为控制设备的指定命令等，对于SPIFLASH,为了支持fatfs格式化功能，需要
+						用到获取扇区数量GET_SECTOR_COUNT指令和获取擦除块数量GET_BLOCK_SIZE和获取
+						扇区大小GET_SECTOR_SIZE命令
+						以N25Q128A来说，
+						/* 扇区数量: 4096*4096/1024/1024=16(MB) */
+							case GET_SECTOR_COUNT:
+								*(DWORD * )buff = 4096;
+								break;
+				
+						/* 扇区大小 */
+						case GET_SECTOR_SIZE :
+							*(WORD * )buff = 4096;
+							break;
+						
+						/* 同时擦除扇区个数 */
+						case GET_BLOCK_SIZE :
+							*(DWORD * )buff = 1;
+							break;
+							
+	DWORD get_fattime (void);		添加获取时间戳函数，可配合RTC使用，获取实时时间
+	
+4.修改ffconf.h配置文件
+主要修改几处，其他宏定义可根据需要修改
+#define	_USE_MKFS		1		/* 修改为1，使能fatfs格式化f_mkfs */
+#define _CODE_PAGE		936		/* 设置中文编码，需要添加cc936.c进工程中*/
+#define	_USE_LFN		0		/* 使能长文件名，当使用长文件名时需要设置成1~3，分别代码存储在不同地方 */
+#define _VOLUMES		2		/* 设置物理设备的数量，如果只有一个spi_flash，只设置成1 */
+#define	_MAX_SS			4096	/* 扇区最大值，默认是512，由于SPI_FLASH扇区大小是4K，因此设置成4096 */						
+#define	_FS_LOCK		2		/* 设置同时可以打开多个文件，0表示只能打开一个 */
+
+移植完成，需要注意的是，spi_flash移植完成首次挂载时，需要进行文件系统格式化f_mkfs，SD卡可在电脑上格式化
+
+2019/8/6：
+fatfs下同时挂载SD卡+SPI flash，需要注意的是，使用f_opendir等带目录参数的API，必须写上盘号,否则无法区别当前打开的是哪个盘
+如f_opendir(&DirInf, "1:/");
+写成f_opendir(&DirInf, "/");会导致目录无法打开或创建
+
+f_write单次写入SD卡，大小最好不要超过SD卡的一个扇区大小512字节，不然连续读写时会出错
+原因是F1的DMA数据收发必须是4字节对齐造成的，F4的话DMA可以设置非4字节对齐，也就是字节传输，所以F4无此问题，传输大数据的话，多次512字节传输即可(从硬汉那里了解到)
+解决了该问题！！！（diskio.c下的disk_write内SD卡读写完成等待，错误写成了SD_WaitReadOperation读等待，修改为SD_WaitWriteOperation写等待，可解决该问题）
+
+/*********************************************************************************************************************************************************/	
+2019/5/20:
+编写自定义串口通信指令解析模块，目前适用于通断测量版的测试盒，其他串口指令解析可在此结构上进行修改。
+采用状态机的方式进行指令解析，解析完一帧后，添加具体动作即可，目前是调用USB_DMM.c中的API进行通断测量。
+
+Cmd_Parse该串口解析模块移植到不同平台使用时，只需根据协议，修改CMD_T结构体内容，以及在Cmd_Parse.c内进行相应的结构体初始化
+命令解析函数CmdPro()是状态机编写，根据协议内容修改具体的协议解析步骤。
+
+*调试中发现结构体中存储信息净荷的MsgBuf的写入索引MsgBufIndex，定义成局部变量时会解析出错，并且无法恢复初始接收状态，
+	将MsgBufIndex封装进命令结构体中，变成全局变量，就没有出现这个问题了。
+/*********************************************************************************************************************************************************/	
