@@ -144,8 +144,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* UART5 interrupt Init */
-    //HAL_NVIC_SetPriority(UART5_IRQn, 0, 0);
-    //HAL_NVIC_EnableIRQ(UART5_IRQn);
+    HAL_NVIC_SetPriority(UART5_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(UART5_IRQn);
   /* USER CODE BEGIN UART5_MspInit 1 */
 
   /* USER CODE END UART5_MspInit 1 */
@@ -272,6 +272,8 @@ void ComSendChar(unsigned char com,unsigned char p)
 		HAL_UART_Transmit(&huart4, sendbuf, 1, 0xff);
 	}
 }
+extern unsigned int Downdatatimeoutnum;
+
 
 unsigned char ETHdatastate = 0;				//ETH数据包接收状态
 unsigned char DOWNdatastate = 0;			//井下数据包接收状态
@@ -316,8 +318,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
+					Resetstate(ETHCMD);
 				}
 				break;
 			case 1:
@@ -328,8 +329,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
+					Resetstate(ETHCMD);
 				}
 				break;
 			case 2:
@@ -340,8 +340,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
+					Resetstate(ETHCMD);
 				}
 				break;
 			case 3:
@@ -352,8 +351,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
+					Resetstate(ETHCMD);
 				}
 				break;
 			case 4:
@@ -395,8 +393,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 					}
 					else
 					{
-						ETHdatabodynum = 0;
-						ETHdataheadnum = 0;
+						Resetstate(ETHCMD);
 					}
 				}
 				else if(OveralltypeH == 0x02)
@@ -406,8 +403,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
+					Resetstate(ETHCMD);
 				}
 				break;
 			case 7:
@@ -475,12 +471,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 			case 17:
 				ETHdatabuf[ETHdataheadnum++] = Uart1_RxBuff[0];
 				ETH_Checksum = (ETH_Checksum << 8) + Uart1_RxBuff[0];
+
 				if(ETH_Checksum == Checksum_Reverse(ETHbodybuf,ETHdatalen))
 				{
 					ETHdataoverflag = 1;
-					ETHdatabodynum = 0;
-					ETHdataheadnum = 0;
-					ETHdatastate = 0;
+				}
+				else
+				{
+					Resetstate(ETHCMD);
 				}
 				break;
 		}
@@ -488,6 +486,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 	}
 	if(huart->Instance == UART5)				//如果产生中断的是串口5
 	{
+		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+		Downdatatimeoutnum = 0;
 		switch(DOWNdatastate)
 		{
 			case 0:
@@ -498,8 +498,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					DOWNdatastate = 0;
-					DOWNheaddatanum = 0;
+					Resetstate(TOOLDATA);
 				}
 				break;
 			case 1:
@@ -510,8 +509,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				}
 				else
 				{
-					DOWNdatastate = 0;
-					DOWNheaddatanum = 0;
+					Resetstate(TOOLDATA);
 				}
 				break;
 			case 2:
@@ -547,10 +545,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				if(DOWN_Checksum == Checksum_sum(DOWNdatabuf,DOWNheaddatanum-2))
 				{
 					DOWNdataoverflag = 1;
-					DOWNdatastate = 0;
-					DOWNheaddatanum = 0;
-					DOWNdatabodynum = 0;
 				}
+				else
+				{
+					Resetstate(TOOLDATA);
+				}
+
 				break;
 		}
 		HAL_UART_Receive_IT(&huart5,Uart5_RxBuff,1);
@@ -562,24 +562,29 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 unsigned char Downcmdbuf[30];
 unsigned char Downdataloadbuf[256] = {0xFF,0x00,0xAA,0x55};
 
-extern unsigned char ETHbodybuf[256];
+extern unsigned int Sertableactlen;
+extern unsigned int Contralcmdlen;
+
+unsigned char Sertableactbuf[50];
+unsigned char Contralcmdbuf[50];
+
 void Downcmdsend (uint8_t type)
 {
 	if(type == SERVICETABLE)
 	{
 		Downcmdbuf[0] = 0x55;  								//发送包头
 		Downcmdbuf[1] = 0xAA;
-		Downcmdbuf[2] = (ETHdatalen+1)>>8;						//ETHdatalen+1:上位机数据体长度+Downcmdbuf[3]
-		Downcmdbuf[3] = ETHdatalen+1;
+		Downcmdbuf[2] = (Sertableactlen+1)>>8;						//Sertableactlen+1:上位机数据体长度+Downcmdbuf[3]
+		Downcmdbuf[3] = Sertableactlen+1;
 		Downcmdbuf[4] = SERVICETABLE;						//数据类型，不属于上位机数据体
 
-		for(unsigned char i=0;i<ETHdatalen;i++)
+		for(unsigned char i=0;i<Sertableactlen;i++)
 		{
-			Downcmdbuf[i+5] = ETHbodybuf[i];				//上位机数据体
+			Downcmdbuf[i+5] = Sertableactbuf[i];				//上位机数据体
 		}
-		Downcmdbuf[ETHdatalen+5] = Checksum_sum(Downcmdbuf,ETHdatalen+5)>>8;
-		Downcmdbuf[ETHdatalen+6] = Checksum_sum(Downcmdbuf,ETHdatalen+5);
-		ComSendBuf(COM5,Downcmdbuf,ETHdatalen+7);			//ETH_Datalen+6:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和/0-ETH_Datalen+5
+		Downcmdbuf[Sertableactlen+5] = Checksum_sum(Downcmdbuf,Sertableactlen+5)>>8;
+		Downcmdbuf[Sertableactlen+6] = Checksum_sum(Downcmdbuf,Sertableactlen+5);
+		ComSendBuf(COM5,Downcmdbuf,Sertableactlen+7);			//ETH_Datalen+6:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和/0-ETH_Datalen+5
 		Workmode = 0;
 
 	}
@@ -587,24 +592,25 @@ void Downcmdsend (uint8_t type)
 	{
 		Downcmdbuf[0] = 0x55;  								//发送包头
 		Downcmdbuf[1] = 0xAA;
-		Downcmdbuf[2] = (ETHdatalen+1)>>8;						//ETHdatalen+1:上位机数据体长度+Downcmdbuf[3]
-		Downcmdbuf[3] = ETHdatalen+1;
+		Downcmdbuf[2] = (Contralcmdlen+3)>>8;
+		Downcmdbuf[3] = Contralcmdlen+3;
 		Downcmdbuf[4] = CONTRALCMD;							//数据类型，不属于上位机数据体
 		Downcmdbuf[5] = Tooladdress;						//命令字，切割仪器为5004
 		Downcmdbuf[6] = Cmdword>>8;
 
-		for(uint8_t i=0;i<ETHdatalen;i++)
+		for(uint8_t i=0;i<Contralcmdlen;i++)
 		{
-			Downcmdbuf[i+7] = ETHbodybuf[i];				//上位机数据体，切割仪器控制命令为8字节
+			Downcmdbuf[i+7] = Contralcmdbuf[i];				//上位机数据体，切割仪器控制命令为8字节
 		}
 
-		Downcmdbuf[ETHdatalen+7] = Checksum_sum(Downcmdbuf,ETHdatalen+7)>>8;
-		Downcmdbuf[ETHdatalen+8] = Checksum_sum(Downcmdbuf,ETHdatalen+7);
+		Downcmdbuf[Contralcmdlen+7] = Checksum_sum(Downcmdbuf,Contralcmdlen+7)>>8;
+		Downcmdbuf[Contralcmdlen+8] = Checksum_sum(Downcmdbuf,Contralcmdlen+7);
 
-		ComSendBuf(COM5,Downcmdbuf,ETHdatalen+9);			//ETH_Datalen+8:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和+2byte命令字/0-ETH_Datalen+7
+		ComSendBuf(COM5,Downcmdbuf,Contralcmdlen+9);			//ETH_Datalen+8:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和+2byte命令字/0-ETH_Datalen+7
 		Workmode = 0;
 
 	}
+/****************************DEACTIVE现由井上执行*******************************/
 	else if(type == DEACTIVE)
 	{
 		Downcmdbuf[0] = 0x55;  								//发送包头
@@ -623,32 +629,52 @@ void Downcmdsend (uint8_t type)
 		//ComSendBuf(COM5,Downcmdbuf,ETH_Datalen+6);			//ETH_Datalen+6:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和/0-ETH_Datalen+5
 		Workmode = 0;
 	}
+	/***************************************************************************/
 }
 
 
-//extern unsigned char Subsetnumber;
+extern unsigned char Subsetnumber;
+extern unsigned long Report_Timestamp;
 void Downdatasend (unsigned char type)
 {
-//	Downdataloadbuf[4] = DOWNdatabodynum>>8;
-//	Downdataloadbuf[5] = DOWNdatabodynum;
-//	Downdataloadbuf[6] = 0x22;									//从井下读数据：0x20000000，仪器采集数据上行：0x02000000
-//	Downdataloadbuf[7] = Tooladdress;
-//	Downdataloadbuf[8] = Subsetnumber>>8;
-//	Downdataloadbuf[9] = Subsetnumber;							//subset号，若为命令返回参数则为命令字
-//	Downdataloadbuf[10] = Report_Timestamp>>24;
-//	Downdataloadbuf[11] = Report_Timestamp>>16;
-//	Downdataloadbuf[12] = Report_Timestamp>>8;
-//	Downdataloadbuf[13] = Report_Timestamp;						//时间标
-//	Downdataloadbuf[14] = 0x00;
-//	Downdataloadbuf[15] = 0x00;									//超时时间,井下仪器控制命令超时时间，暂时没有返回
-//	Downdataloadbuf[16] = type;									//超时or数据
-//	Downdataloadbuf[17] = 0x00;									//预留
-//	for(unsigned char i=0;i<DOWNdatabodynum;i++)
-//	{
-//		Downdataloadbuf[18+i] = DOWNbodybuf[i];
-//	}
-//	Downdataloadbuf[DOWNdatabodynum+18] = Checksum_sum(Downdataloadbuf,DOWNdatabodynum+18)>>8;
-//	Downdataloadbuf[DOWNdatabodynum+19] = Checksum_sum(Downdataloadbuf,DOWNdatabodynum+18);
-//	ComSendBuf(COM1,Downdataloadbuf,DOWNdatabodynum+20);
+	Downdataloadbuf[4] = DOWNdatabodynum>>8;
+	Downdataloadbuf[5] = DOWNdatabodynum;
+	Downdataloadbuf[6] = 0x22;									//从井下读数据：0x20000000，仪器采集数据上行：0x02000000
+	Downdataloadbuf[7] = Tooladdress;
+	Downdataloadbuf[8] = Subsetnumber>>8;
+	Downdataloadbuf[9] = Subsetnumber;							//subset号，若为命令返回参数则为命令字
+	Downdataloadbuf[10] = Report_Timestamp>>24;
+	Downdataloadbuf[11] = Report_Timestamp>>16;
+	Downdataloadbuf[12] = Report_Timestamp>>8;
+	Downdataloadbuf[13] = Report_Timestamp;						//时间标
+	Downdataloadbuf[14] = 0x00;
+	Downdataloadbuf[15] = 0x00;									//超时时间,井下仪器控制命令超时时间，暂时没有返回
+	Downdataloadbuf[16] = type;									//超时or数据
+	Downdataloadbuf[17] = 0x00;									//预留
+	for(unsigned char i=0;i<DOWNdatabodynum;i++)
+	{
+		Downdataloadbuf[18+i] = DOWNbodybuf[i];
+	}
+	Downdataloadbuf[DOWNdatabodynum+18] = Checksum_sum(Downdataloadbuf,DOWNdatabodynum+18)>>8;
+	Downdataloadbuf[DOWNdatabodynum+19] = Checksum_sum(Downdataloadbuf,DOWNdatabodynum+18);
+	ComSendBuf(COM1,Downdataloadbuf,DOWNdatabodynum+20);
 }
 /* USER CODE END 1 */
+
+void Resetstate(unsigned char tep)
+{
+	if(tep == ETHCMD)
+	{
+		ETHdatabodynum = 0;
+		ETHdatastate = 0;
+		ETHdataheadnum = 0;
+		ETHdataoverflag = 0;
+	}
+	else if(tep == TOOLDATA)
+	{
+		DOWNdataoverflag = 0;
+		DOWNdatastate = 0;
+		DOWNheaddatanum = 0;
+		DOWNdatabodynum = 0;
+	}
+}

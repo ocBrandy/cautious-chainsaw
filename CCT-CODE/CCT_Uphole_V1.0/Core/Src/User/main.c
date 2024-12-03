@@ -27,6 +27,6 @@ int main(void)
 	  DOWN_DATAPOLL();									//DOWN数据轮询
 	  Sendtimestamp();									//时间深度同步
 
-	  IWDG_FEED_DOG();									//喂狗
+	  IWDG_FEED_DOG();									//喂狗，超过410ms未清看门狗，系统复位
   }
 }

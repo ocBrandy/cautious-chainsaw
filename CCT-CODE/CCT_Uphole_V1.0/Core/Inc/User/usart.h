@@ -53,6 +53,10 @@ extern UART_HandleTypeDef huart1;
 #define DATABACK 00
 #define TIMEOUT 01
 
+#define ETHCMD		0x01
+#define TOOLDATA	0x02
+
+
 
 
 /* USER CODE END Private defines */
@@ -65,6 +69,7 @@ void Downcmdsend (uint8_t type);
 void Downdatasend (unsigned char type);
 void ComSendBuf(uint8_t com,uint8_t *p,uint16_t len);
 void ComSendChar(unsigned char com,unsigned char p);
+void Resetstate (unsigned char tep);
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */

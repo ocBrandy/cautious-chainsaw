@@ -104,10 +104,13 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+extern unsigned int Sampleperiod;
+unsigned int i = 0;
 unsigned int isdowndcmdreport;
 unsigned char istimestampreport = 0;
 unsigned long Report_Timestamp = 0;
 unsigned int Downdatatimeoutnum = 0;
+unsigned char isDowntoolcmdreport = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM6)
@@ -116,9 +119,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		isdowndcmdreport++;
 		istimestampreport++;
 		Downdatatimeoutnum++;
-		if(isdowndcmdreport>510){isdowndcmdreport = 0;}
-		if(Downdatatimeoutnum>700){Downdatatimeoutnum = 0;} //？
-
+		i++;
+		if(i > 500)
+		{
+			ComSendChar(COM1,Sampleperiod>>8);
+			ComSendChar(COM1,Sampleperiod);
+			i = 0;
+		}
 	}
 }
 /* USER CODE END 1 */

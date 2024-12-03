@@ -61,6 +61,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
+//ADDR
 #define ADDR0_Pin GPIO_PIN_2
 #define ADDR0_GPIO_Port GPIOE
 
@@ -73,17 +75,17 @@ void Error_Handler(void);
 #define ADDR3_Pin GPIO_PIN_5
 #define ADDR3_GPIO_Port GPIOE
 
+
+
+//DATA
+#define DATA0_Pin GPIO_PIN_12
+#define DATA0_GPIO_Port GPIOA
+
 #define DATA1_Pin GPIO_PIN_2
 #define DATA1_GPIO_Port GPIOA
 
 #define DATA2_Pin GPIO_PIN_3
 #define DATA2_GPIO_Port GPIOA
-
-#define MCU_WR_Pin GPIO_PIN_11
-#define MCU_WR_GPIO_Port GPIOA
-
-#define DATA0_Pin GPIO_PIN_12
-#define DATA0_GPIO_Port GPIOA
 
 #define DATA3_Pin GPIO_PIN_3
 #define DATA3_GPIO_Port GPIOD
@@ -99,6 +101,11 @@ void Error_Handler(void);
 
 #define DATA7_Pin GPIO_PIN_9
 #define DATA7_GPIO_Port GPIOB
+
+
+//WR&CS
+#define MCU_WR_Pin GPIO_PIN_11
+#define MCU_WR_GPIO_Port GPIOA
 
 #define MCU_CS_Pin GPIO_PIN_0
 #define MCU_CS_GPIO_Port GPIOE

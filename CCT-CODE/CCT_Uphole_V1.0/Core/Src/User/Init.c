@@ -62,7 +62,7 @@ void MX_IWDG_Init(void)
 
 void IWDG_FEED_DOG(void)
 {
-	HAL_IWDG_Refresh(&iwdg);	//500ms内清掉看门狗
+	HAL_IWDG_Refresh(&iwdg);	//410ms内清掉看门狗
 }
 
 /****************************************************************/
