@@ -28,7 +28,10 @@ Core/Src/System/stm32f1xx_hal_msp.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/User/tim.h ../Core/Inc/User/usart.h ../Core/Inc/User/gpio.h \
- ../Core/Inc/User/Passthrough.h ../Core/Inc/User/fpga.h
+ ../Core/Inc/User/Passthrough.h ../Core/Inc/User/fpga.h \
+ ../Drivers/SEGGER_RTT/Inc/SEGGER_RTT.h \
+ ../Drivers/SEGGER_RTT/Inc/SEGGER_RTT_Conf.h \
+ ../Drivers/SEGGER_RTT/Inc/SEGGER_RTT_Conf.h
 ../Core/Inc/User/main.h:
 ../Core/Inc/User/init.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -62,3 +65,6 @@ Core/Src/System/stm32f1xx_hal_msp.o: \
 ../Core/Inc/User/gpio.h:
 ../Core/Inc/User/Passthrough.h:
 ../Core/Inc/User/fpga.h:
+../Drivers/SEGGER_RTT/Inc/SEGGER_RTT.h:
+../Drivers/SEGGER_RTT/Inc/SEGGER_RTT_Conf.h:
+../Drivers/SEGGER_RTT/Inc/SEGGER_RTT_Conf.h:

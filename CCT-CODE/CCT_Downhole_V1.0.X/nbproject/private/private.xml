@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/Passthrough.c</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/init.c</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/main.c</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/usart.c</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/usart.h</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/init.h</file>
-            <file>file:/D:/A_work_document/CCT/CODE/DOWN/pic/CCT_Downhole_V1.0.X/main.h</file>
+            <file>file:/D:/Code/Git_repository/CCT-CODE/CCT_Downhole_V1.0.X/usart.c</file>
+            <file>file:/D:/Code/Git_repository/CCT-CODE/CCT_Downhole_V1.0.X/Passthrough.c</file>
+            <file>file:/D:/Code/Git_repository/CCT-CODE/CCT_Downhole_V1.0.X/usart.h</file>
+            <file>file:/D:/Code/Git_repository/CCT-CODE/CCT_Downhole_V1.0.X/main.c</file>
         </group>
     </open-files>
 </project-private>

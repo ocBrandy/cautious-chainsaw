@@ -272,7 +272,7 @@ void ComSendChar(unsigned char com,unsigned char p)
 		HAL_UART_Transmit(&huart4, sendbuf, 1, 0xff);
 	}
 }
-extern unsigned int Downdatatimeoutnum;
+extern unsigned short Downdatatimeoutnum;
 
 
 unsigned char ETHdatastate = 0;				//ETH数据包接收状态
@@ -288,17 +288,17 @@ unsigned char ETHdatabuf[256];				//ETH数据包缓存
 unsigned char DOWNdatabuf[256];				//井下数据数据包缓存
 unsigned char ETHbodybuf[256];				//ETH数据包包体缓存
 unsigned char DOWNbodybuf[256];				//井下数据包包体缓存
-unsigned int ETHdatalen;					//ETH数据包体长度
-unsigned int DOWNdatalen;					//井下数据包体长度
+unsigned short ETHdatalen;					//ETH数据包体长度
+unsigned short DOWNdatalen;					//井下数据包体长度
 unsigned char Workmode;						//工作模式
 unsigned char Tooladdress;					//ETH数据包头中的仪器地址
-unsigned int Cmdword;						//命令字
+unsigned short Cmdword;						//命令字
 unsigned char Timestampnum;
 unsigned long ETH_Timestamp;				//ETH下发的时间标
-unsigned int Overtime;						//仪器命令超时时间，与Delaytime不同
-unsigned int Reserve;						//ETH数据包包头预留位
-unsigned int ETH_Checksum;					//ETH下发的校验和
-unsigned int DOWN_Checksum;					//井下上传的校验和
+unsigned short Overtime;						//仪器命令超时时间，与Delaytime不同
+unsigned short Reserve;						//ETH数据包包头预留位
+unsigned short ETH_Checksum;					//ETH下发的校验和
+unsigned short DOWN_Checksum;					//井下上传的校验和
 unsigned char ETHdataoverflag;				//ETH数据接收完毕标志
 unsigned char DOWNdataoverflag;				//井下数据接收完毕标志
 
@@ -562,8 +562,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 unsigned char Downcmdbuf[30];
 unsigned char Downdataloadbuf[256] = {0xFF,0x00,0xAA,0x55};
 
-extern unsigned int Sertableactlen;
-extern unsigned int Contralcmdlen;
+extern unsigned short Sertableactlen;
+extern unsigned short Contralcmdlen;
 
 unsigned char Sertableactbuf[50];
 unsigned char Contralcmdbuf[50];
@@ -611,7 +611,7 @@ void Downcmdsend (uint8_t type)
 
 	}
 /****************************DEACTIVE现由井上执行*******************************/
-	else if(type == DEACTIVE)
+	/*else if(type == DEACTIVE)
 	{
 		Downcmdbuf[0] = 0x55;  								//发送包头
 		Downcmdbuf[1] = 0xAA;
@@ -628,13 +628,13 @@ void Downcmdsend (uint8_t type)
 
 		//ComSendBuf(COM5,Downcmdbuf,ETH_Datalen+6);			//ETH_Datalen+6:上位机数据体+2byte帧头+2byte长度和数据类型+2byte校验和/0-ETH_Datalen+5
 		Workmode = 0;
-	}
+	}*/
 	/***************************************************************************/
 }
 
 
 extern unsigned char Subsetnumber;
-extern unsigned long Report_Timestamp;
+extern unsigned int Report_Timestamp;
 void Downdatasend (unsigned char type)
 {
 	Downdataloadbuf[4] = DOWNdatabodynum>>8;

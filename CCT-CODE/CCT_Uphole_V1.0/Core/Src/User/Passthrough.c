@@ -6,12 +6,12 @@
  */
 #include "main.h"
 
-extern unsigned int Downdatatimeoutnum;
+extern unsigned short Downdatatimeoutnum;
 extern unsigned char Workmode;
 extern unsigned char ETHbodybuf[256];
 extern unsigned char ETHdatabuf[256];
 extern unsigned char ETHdatalen;
-extern unsigned int isdowndcmdreport;
+extern unsigned short isdowndcmdreport;
 extern unsigned char ETHdataoverflag;
 extern unsigned char ETHdataheadnum;
 
@@ -20,15 +20,15 @@ extern unsigned char Contralcmdbuf[50];
 
 unsigned char ToolID;							//ETH数据包体中的仪器地址
 unsigned char Subsetnumber;						//subsetnumber数据包体中的subset号，与包头中不同
-unsigned int Tool_Datalen;						//仪器返回数据长度，与数据包长度区别
-unsigned int Sampleperiod = 0xFFFF;				//ETH下发的时间采样率，决定仪器以多少频率上传数据
-unsigned int Delaytime;						//仪器数据超时时间，与ETH数据包包头中的Overtime区别
+unsigned short Tool_Datalen;						//仪器返回数据长度，与数据包长度区别
+unsigned short Sampleperiod = 0xFFFF;				//ETH下发的时间采样率，决定仪器以多少频率上传数据
+unsigned short Delaytime;						//仪器数据超时时间，与ETH数据包包头中的Overtime区别
 unsigned char Teleset;							//配置仪器是否采样等标志
 unsigned char Data_reserve;						//ETH下发数据包中的预留位，与ETH数据包包头中的预留区别
 unsigned char Sertableactflag = 0xff;
 unsigned char CONTRALCMDFLAG = 0;
-unsigned int Sertableactlen;
-unsigned int Contralcmdlen;
+unsigned short Sertableactlen;
+unsigned short Contralcmdlen;
 
 void ETH_CMDPOLL(void)
 {
@@ -47,6 +47,7 @@ void ETH_CMDPOLL(void)
 					Teleset = (ETHbodybuf[8] << 8) + ETHbodybuf[9];
 					Data_reserve = (ETHbodybuf[10] << 8) + ETHbodybuf[11];		//各参数暂存
 
+					PRINT_LOG("CMD is SERVICETABLE\n\r");
 					Sertableactlen = ETHdatalen;
 
 					for(unsigned char i=0;i<Sertableactlen;i++)
@@ -61,6 +62,7 @@ void ETH_CMDPOLL(void)
 			case CONTRALCMD:								//控制命令
 
 					Contralcmdlen = ETHdatalen;
+					PRINT_LOG("CMD is CONTRALCMD\n\r");
 
 					for(unsigned char i=0;i<Contralcmdlen;i++)
 					{
@@ -71,20 +73,22 @@ void ETH_CMDPOLL(void)
 			break;
 			case DEACTIVE:									//服务表反激活
 					Sertableactflag = 0;
+					PRINT_LOG("CMD is DEACTIVE\n\r");
 					Sampleperiod = 0xFFFF;
 			break;
 		}
 	}
-	if(Sertableactflag == 1 && isdowndcmdreport == Sampleperiod)		//服务表激活后 按照采样率向井下下发
+	if(Sertableactflag == 1 && isdowndcmdreport >= Sampleperiod)		//服务表激活后 按照采样率向井下下发
 	{
 		if(CONTRALCMDFLAG == 1)
 		{
-			Downcmdsend(CONTRALCMD);
 			CONTRALCMDFLAG = 0;
+			//PRINT_LOG("CMD is Toolcontralcmd\n\r");
 		}
 		else
 		{
 			Downcmdsend(SERVICETABLE);
+			//PRINT_LOG("CMD is Servicetable\n\r");
 		}
 		isdowndcmdreport = 0;
 	}
@@ -98,23 +102,23 @@ void DOWN_DATAPOLL(void)
 {
 	if(DOWNdataoverflag == 1 && Downdatatimeoutnum <= Delaytime	)	//数据接收完毕且切在上位机允许的时间范围内
 	{
-		//Downdatasend(DATABACK);
+		Downdatasend(DATABACK);
 		Resetstate(TOOLDATA);
 	}
 	else if(Sertableactflag == 1 && Downdatatimeoutnum > Delaytime)	//无数据或数据接收完毕但超出上位机允许的时间范围
 	{
-		//Downdatasend(TIMEOUT);
+		Downdatasend(TIMEOUT);
 		Downdatatimeoutnum = 0;
 		Resetstate(TOOLDATA);
 	}
 }
 
 extern unsigned char istimestampreport;
-extern unsigned long Report_Timestamp;
+extern unsigned int Report_Timestamp;
 unsigned char Timestampbuf[10]={0x47,0x47};
 void Sendtimestamp(void)
 {
-	if(istimestampreport == 9)
+	if(istimestampreport >= 9)
 	{
 		Timestampbuf[2] = Report_Timestamp;
 		Timestampbuf[3] = Report_Timestamp>>8;

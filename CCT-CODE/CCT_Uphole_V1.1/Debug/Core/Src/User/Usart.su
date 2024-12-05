@@ -1,0 +1,14 @@
+../Core/Src/User/Usart.c:36:6:usart_init	8	static
+../Core/Src/User/Usart.c:44:6:MX_UART4_Init	8	static
+../Core/Src/User/Usart.c:60:6:MX_UART5_Init	8	static
+../Core/Src/User/Usart.c:77:6:MX_USART1_UART_Init	8	static
+../Core/Src/User/Usart.c:97:6:HAL_UART_MspInit	64	static
+../Core/Src/User/Usart.c:222:6:HAL_UART_MspDeInit	16	static
+../Core/Src/User/Usart.c:291:6:ComSendBuf	16	static
+../Core/Src/User/Usart.c:307:6:ComSendChar	24	static
+../Core/Src/User/Usart.c:356:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/User/Usart.c:621:6:DMA1_Channel4_IRQHandler	8	static
+../Core/Src/User/Usart.c:626:6:DMA2_Channel4_5_IRQHandler	8	static
+../Core/Src/User/Usart.c:640:6:Downcmdsend	24	static
+../Core/Src/User/Usart.c:707:6:Downdatasend	24	static
+../Core/Src/User/Usart.c:733:6:Resetstate	16	static

@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#include <stdio.h>          //头文件包含
+#include <stdlib.h>
+#include <xc.h>
+
 #include "GPIO.h"
 #include "USART.h"
 #include "init.h"

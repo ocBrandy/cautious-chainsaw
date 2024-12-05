@@ -33,6 +33,11 @@ extern "C" {
 #include "gpio.h"
 #include "Passthrough.h"
 #include "fpga.h"
+#include <stdbool.h>
+#include "SEGGER_RTT.h"
+#include <stdarg.h>
+#include "SEGGER_RTT_Conf.h"
+#include <stdio.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

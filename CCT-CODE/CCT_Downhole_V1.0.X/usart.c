@@ -68,23 +68,23 @@ void __attribute__ ((__interrupt__, no_auto_psv)) _U1RXInterrupt (void)
     Tooldata[T1rxnum] = U1RXREG;
     T1rxnum++;
     
-    if(T1rxnum == Tooldatalen - 8)           //调试为70 实际井上下发的Tooldatalen
+    if(T1rxnum == Tooldatalen - 8)           //Tooldatalen - 8：井上下发数据长度-通讯板补充的数据长度 = 井下仪器返回的数据长度
     {
         Tooldata_over = 1;
     }
     
-    if(T1rxnum > 599)
+    if(T1rxnum > 599)                       //串口接收错误超时
         T1rxnum = 0;
 }
 
 void ComSendChar (unsigned char com,unsigned char data)
 {
-    if (com == 1)
+    if (com == 0xee)
     {
         U1TXREG = data;
         while(!U1STAbits.TRMT);   
     }
-    else if(com == 2)
+    else if(com == 0xdd)
     {
          U2TXREG = data;
         while(!U2STAbits.TRMT);
@@ -94,7 +94,7 @@ void ComSendChar (unsigned char com,unsigned char data)
 void ComSendBuf (unsigned char com,unsigned char *data,unsigned int len )
 {
     unsigned char i;
-    if(com == 1)
+    if(com == 0xee)
     {
         for(i=0;i<len;i++)
         {
@@ -103,7 +103,7 @@ void ComSendBuf (unsigned char com,unsigned char *data,unsigned int len )
         }
         
     }
-    else if(com == 2)
+    else if(com == 0xdd)
     {
         for(i=0;i<len;i++)
         {

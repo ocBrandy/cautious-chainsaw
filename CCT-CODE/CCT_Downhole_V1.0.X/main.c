@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: CJCJ
+ * Author: TERRYTEC
  *
  * Created on November 14, 2024, 10:07 AM
  */
@@ -40,25 +40,19 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <xc.h>
 #include "main.h"
-
 /*
  * 
  */
 int main() 
 {
-    init();
+    init();                     //硬件初始化
     while(1)
     {
-    	asm("CLRWDT");
+    	asm("CLRWDT");          //定时清狗，但狗还没配置
         
-        Up_Cmd_poll();
-        Tool_data_poll();
-        
+        Up_Cmd_poll();          //井上指令轮询
+        Tool_data_poll();       //井下仪器数据轮询
     }
 }
 

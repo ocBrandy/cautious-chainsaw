@@ -1,20 +1,20 @@
 Microchip Technology Inc, v1.31 (A)
 
 Tool Name:
-  d:\software\microchip\xc16\bin\bin\..\bin/elf-ld.exe
+  d:\software\microchip\xc16\v1.31\bin\bin\..\bin/elf-ld.exe
 
 Command:
   -p30F6014A \
   -o \
   dist/default/production/CCT_Downhole_V1.0.X.production.elf \
-  -Ld:/software/microchip/xc16/bin/bin/.. \
-  -Ld:/software/microchip/xc16/bin/bin/../../lib \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/PIC24E/gld \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/PIC24F/gld \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/PIC24H/gld \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/dsPIC30F/gld \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/dsPIC33E/gld \
-  -Ld:/software/microchip/xc16/bin/bin/../../support/dsPIC33F/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/.. \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../lib \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/PIC24E/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/PIC24F/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/PIC24H/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/dsPIC30F/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/dsPIC33E/gld \
+  -Ld:/software/microchip/xc16/v1.31/bin/bin/../../support/dsPIC33F/gld \
   build/default/production/main.o \
   build/default/production/usart.o \
   build/default/production/init.o \
@@ -48,11 +48,11 @@ Command:
 Optional library libp30F6014A.a not found
 Archive member included because of file (symbol)
 
-d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                               (__resetPRI)
-d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
-                              d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o) (__data_init_standard)
-d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                              d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o) (__data_init_standard)
+d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
                               (__crt_start_mode_normal)
 
 
@@ -91,11 +91,11 @@ Program Memory  [Origin = 0x100, Length = 0x17f00]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x100                0xce           0x135  (309)
-.text                        0x1ce               0x1d0           0x2b8  (696)
-.dinit                       0x39e               0x176           0x231  (561)
-.text                        0x514               0x212           0x31b  (795)
+.text                        0x1ce               0x1d4           0x2be  (702)
+.dinit                       0x3a2               0x176           0x231  (561)
+.text                        0x518               0x20c           0x312  (786)
 
-                 Total program memory used (bytes):          0x939  (2361) 1%
+                 Total program memory used (bytes):          0x936  (2358) 1%
 
 
 Ivt Memory  [Origin = 0x4, Length = 0x7c]
@@ -191,27 +191,27 @@ External Symbols in Program Memory (by address):
                   0x0001f8                  __U2RXInterrupt
                   0x0002c0                  __U1RXInterrupt
                   0x0002f8                  _ComSendChar
-                  0x000334                  _ComSendBuf
-                  0x000514                  _Up_Cmd_poll
+                  0x000336                  _ComSendBuf
+                  0x000518                  _Up_Cmd_poll
                   0x0005ec                  _Tool_data_poll
-                  0x000682                  _bsp_InitTimer3
-                  0x000696                  _Delay_ms
-                  0x0006be                  _init
-                  0x0006ca                  _Checksum
-                  0x0006f8                  _gpio_initial
-                  0x00071a                  _main
+                  0x000680                  _bsp_InitTimer3
+                  0x000694                  _Delay_ms
+                  0x0006bc                  _init
+                  0x0006c8                  _Checksum
+                  0x0006f6                  _gpio_initial
+                  0x000718                  _main
                   0xf80006                  __FBS.sec
                   0xf80008                  __FSS.sec
                   0xf8000a                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
-                  0x0006ca                  _Checksum
-                  0x000334                  _ComSendBuf
+                  0x0006c8                  _Checksum
+                  0x000336                  _ComSendBuf
                   0x0002f8                  _ComSendChar
-                  0x000696                  _Delay_ms
+                  0x000694                  _Delay_ms
                   0x0005ec                  _Tool_data_poll
-                  0x000514                  _Up_Cmd_poll
+                  0x000518                  _Up_Cmd_poll
                   0x0001ce                  _UsartInit
                   0x0001c8                  __DefaultInterrupt
                   0xf80006                  __FBS.sec
@@ -223,10 +223,10 @@ External Symbols in Program Memory (by name):
                   0x000152                  __data_init_standard
                   0x00013c                  __psv_init
                   0x000100                  __resetPRI
-                  0x000682                  _bsp_InitTimer3
-                  0x0006f8                  _gpio_initial
-                  0x0006be                  _init
-                  0x00071a                  _main
+                  0x000680                  _bsp_InitTimer3
+                  0x0006f6                  _gpio_initial
+                  0x0006bc                  _init
+                  0x000718                  _main
 
 Memory Configuration
 
@@ -261,7 +261,7 @@ LOAD build/default/production/Timer.o
 LOAD build/default/production/Passthrough.o
                     0x0001                  __MPLAB_BUILD = 0x1
 LOAD p30F6014A
-LOAD d:/software/microchip/xc16/bin/bin/../../lib\libfx-elf.a
+LOAD d:/software/microchip/xc16/v1.31/bin/bin/../../lib\libfx-elf.a
                     0x8005c0                  __FUID0 = 0x8005c0
                     0x8005c2                  __FUID1 = 0x8005c2
                     0x8005c4                  __FUID2 = 0x8005c4
@@ -289,11 +289,11 @@ LOAD d:/software/microchip/xc16/bin/bin/../../lib\libfx-elf.a
 
 .text             0x000100         0xce
  *(.init)
- .init            0x000100         0x4c d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+ .init            0x000100         0x4c d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                   0x000100                  __resetPRI
                   0x000100                  __reset
                   0x00013c                  __psv_init
- .init            0x00014c         0x7c d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+ .init            0x00014c         0x7c d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
                   0x000152                  __data_init_standard
                   0x000152                  __data_init
  *(.user_init)
@@ -306,7 +306,7 @@ LOAD d:/software/microchip/xc16/bin/bin/../../lib\libfx-elf.a
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x0001cc          0x2 d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                  0x0001cc          0x2 d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
                   0x0001cc                  __crt_start_mode
                   0x0001cc                  __crt_start_mode_normal
 
@@ -361,33 +361,33 @@ userdata
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x1a24
+.debug_info       0x000000       0x1b4f
  *(.debug_info)
- .debug_info      0x000000        0x13d build/default/production/main.o
- .debug_info      0x00013d        0xdba build/default/production/usart.o
- .debug_info      0x000ef7        0x12b build/default/production/init.o
- .debug_info      0x001022        0x1be build/default/production/GPIO.o
- .debug_info      0x0011e0        0x47a build/default/production/Timer.o
- .debug_info      0x00165a        0x3ca build/default/production/Passthrough.o
+ .debug_info      0x000000        0x138 build/default/production/main.o
+ .debug_info      0x000138        0xe20 build/default/production/usart.o
+ .debug_info      0x000f58        0x18d build/default/production/init.o
+ .debug_info      0x0010e5        0x1b9 build/default/production/GPIO.o
+ .debug_info      0x00129e        0x475 build/default/production/Timer.o
+ .debug_info      0x001713        0x43c build/default/production/Passthrough.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x402
+.debug_abbrev     0x000000        0x400
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0x34 build/default/production/main.o
  .debug_abbrev    0x000034        0x16a build/default/production/usart.o
- .debug_abbrev    0x00019e         0x74 build/default/production/init.o
- .debug_abbrev    0x000212         0x4c build/default/production/GPIO.o
- .debug_abbrev    0x00025e        0x100 build/default/production/Timer.o
- .debug_abbrev    0x00035e         0xa4 build/default/production/Passthrough.o
+ .debug_abbrev    0x00019e         0x72 build/default/production/init.o
+ .debug_abbrev    0x000210         0x4c build/default/production/GPIO.o
+ .debug_abbrev    0x00025c        0x100 build/default/production/Timer.o
+ .debug_abbrev    0x00035c         0xa4 build/default/production/Passthrough.o
 
-.debug_line       0x000000        0x2ab
+.debug_line       0x000000        0x2b8
  *(.debug_line)
  .debug_line      0x000000         0x38 build/default/production/main.o
- .debug_line      0x000038         0xbf build/default/production/usart.o
- .debug_line      0x0000f7         0x3c build/default/production/init.o
- .debug_line      0x000133         0x84 build/default/production/GPIO.o
- .debug_line      0x0001b7         0x88 build/default/production/Timer.o
- .debug_line      0x00023f         0x6c build/default/production/Passthrough.o
+ .debug_line      0x000038         0xc5 build/default/production/usart.o
+ .debug_line      0x0000fd         0x3c build/default/production/init.o
+ .debug_line      0x000139         0x8a build/default/production/GPIO.o
+ .debug_line      0x0001c3         0x8e build/default/production/Timer.o
+ .debug_line      0x000251         0x67 build/default/production/Passthrough.o
 
 .debug_frame      0x000000        0x21a
  *(.debug_frame)
@@ -1451,9 +1451,9 @@ userdata
                     0x0216                  UART2 = 0x216
                     0x0216                  _UART2 = 0x216
 START GROUP
-LOAD d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a
-LOAD d:/software/microchip/xc16/bin/bin/../../lib\libm-elf.a
-LOAD d:/software/microchip/xc16/bin/bin/../../lib\liblega-c-elf.a
+LOAD d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a
+LOAD d:/software/microchip/xc16/v1.31/bin/bin/../../lib\libm-elf.a
+LOAD d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/production/CCT_Downhole_V1.0.X.production.elf elf32-pic30)
 LOAD FGS
@@ -1492,9 +1492,9 @@ __c30_signature
  __c30_signature
                   0x000208          0x6 build/default/production/Passthrough.o
  __c30_signature
-                  0x00020e          0x6 d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                  0x00020e          0x6 d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000214          0x6 d:/software/microchip/xc16/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                  0x000214          0x6 d:/software/microchip/xc16/v1.31/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
 
 .nbss               0x0800         0x20
  .nbss              0x0800          0xe build/default/production/usart.o
@@ -1557,28 +1557,28 @@ __c30_signature
  .ivt._U1RXInterrupt
                   0x000026          0x2 build/default/production/usart.o
 
-.text             0x0001ce        0x1d0
- .text            0x0001ce        0x1d0 build/default/production/usart.o
+.text             0x0001ce        0x1d4
+ .text            0x0001ce        0x1d4 build/default/production/usart.o
                   0x0001ce                  _UsartInit
                   0x0001f8                  __U2RXInterrupt
                   0x0002c0                  __U1RXInterrupt
                   0x0002f8                  _ComSendChar
-                  0x000334                  _ComSendBuf
+                  0x000336                  _ComSendBuf
 
-.dinit            0x00039e        0x176
- .dinit           0x00039e        0x176 data_init
+.dinit            0x0003a2        0x176
+ .dinit           0x0003a2        0x176 data_init
 
-.text             0x000514        0x212
- .text            0x000514        0x16e build/default/production/Passthrough.o
-                  0x000514                  _Up_Cmd_poll
+.text             0x000518        0x20c
+ .text            0x000518        0x168 build/default/production/Passthrough.o
+                  0x000518                  _Up_Cmd_poll
                   0x0005ec                  _Tool_data_poll
- .text            0x000682         0x3c build/default/production/Timer.o
-                  0x000682                  _bsp_InitTimer3
-                  0x000696                  _Delay_ms
- .text            0x0006be         0x3a build/default/production/init.o
-                  0x0006be                  _init
-                  0x0006ca                  _Checksum
- .text            0x0006f8         0x22 build/default/production/GPIO.o
-                  0x0006f8                  _gpio_initial
- .text            0x00071a          0xc build/default/production/main.o
-                  0x00071a                  _main
+ .text            0x000680         0x3c build/default/production/Timer.o
+                  0x000680                  _bsp_InitTimer3
+                  0x000694                  _Delay_ms
+ .text            0x0006bc         0x3a build/default/production/init.o
+                  0x0006bc                  _init
+                  0x0006c8                  _Checksum
+ .text            0x0006f6         0x22 build/default/production/GPIO.o
+                  0x0006f6                  _gpio_initial
+ .text            0x000718          0xc build/default/production/main.o
+                  0x000718                  _main

@@ -11,6 +11,8 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#define COM1 0Xee
+#define COM2 0xdd
 
 void UsartInit(void);
 void ComSendChar (unsigned char com,unsigned char data);

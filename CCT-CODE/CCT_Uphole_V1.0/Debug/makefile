@@ -10,6 +10,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
+-include Drivers/SEGGER_RTT/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/User/subdir.mk
 -include Core/Src/System/subdir.mk
@@ -61,8 +62,8 @@ all: main-build
 main-build: CCT_Uphole_V1.0.elf secondary-outputs
 
 # Tool invocations
-CCT_Uphole_V1.0.elf CCT_Uphole_V1.0.map: $(OBJS) $(USER_OBJS) D:\A_work_document\CCT\CODE\UP\cpu\CCT_Uphole_V1.0\STM32F103VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "CCT_Uphole_V1.0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\A_work_document\CCT\CODE\UP\cpu\CCT_Uphole_V1.0\STM32F103VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CCT_Uphole_V1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+CCT_Uphole_V1.0.elf CCT_Uphole_V1.0.map: $(OBJS) $(USER_OBJS) D:\Code\Git_repository\CCT-CODE\CCT_Uphole_V1.0\STM32F103VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "CCT_Uphole_V1.0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Code\Git_repository\CCT-CODE\CCT_Uphole_V1.0\STM32F103VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CCT_Uphole_V1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
