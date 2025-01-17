@@ -1,11 +1,9 @@
 #include  "gpio.h"
 #include <p30f6014a.h>
 
-// #include "../../../module/common/Math/bit_operation.h"
-
 #define MAX_PIN_NUM        16
 
-static void GPIOA_Cfg(uint8_t pin,uint8_t value)
+static void GPIOA_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -37,7 +35,7 @@ static void GPIOA_Cfg(uint8_t pin,uint8_t value)
             break;
     }
 }
-static void GPIOB_Cfg(uint8_t pin,uint8_t value)
+static void GPIOB_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -93,7 +91,7 @@ static void GPIOB_Cfg(uint8_t pin,uint8_t value)
             break;
     }
 }
-static void GPIOC_Cfg(uint8_t pin,uint8_t value)
+static void GPIOC_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -122,7 +120,7 @@ static void GPIOC_Cfg(uint8_t pin,uint8_t value)
             break;
     }
 }
-static void GPIOD_Cfg(uint8_t pin,uint8_t value)
+static void GPIOD_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -178,7 +176,7 @@ static void GPIOD_Cfg(uint8_t pin,uint8_t value)
             break;
     }
 }
-static void GPIOF_Cfg(uint8_t pin,uint8_t value)
+static void GPIOF_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -213,7 +211,7 @@ static void GPIOF_Cfg(uint8_t pin,uint8_t value)
             break;
     }
 }
-static void GPIOG_Cfg(uint8_t pin,uint8_t value)
+static void GPIOG_Cfg(unsigned char pin,unsigned char value)
 {
     switch(pin)
     {
@@ -260,7 +258,7 @@ static void GPIOG_Cfg(uint8_t pin,uint8_t value)
 
 void GpioPinConfig(e_IO_port port,unsigned char pin,e_IO_mode mode)
 {
-    uint8_t value;
+    unsigned char value;
     if(pin >= MAX_PIN_NUM || port >= 6) {return;}
     if(mode == GPIO_input)
     {
@@ -296,15 +294,15 @@ void GpioPinConfig(e_IO_port port,unsigned char pin,e_IO_mode mode)
     }
 }
 
-void GpioPinSet(e_IO_port port,uint8_t pin,uint8_t value)
+void GpioPinSet(e_IO_port port,unsigned char pin,unsigned char value)
 {
     if(pin >= MAX_PIN_NUM || port >= 6) {return;}
     _LATG15 = value;
 }
 
-uint8_t GpioPinRead(e_IO_port port,uint8_t pin)
+unsigned char GpioPinRead(e_IO_port port,unsigned char pin)
 {
-    uint8_t value;
+    unsigned char value;
     if(pin >= MAX_PIN_NUM || port >= 6) {return 0;}
     
     value = _RG12;
@@ -341,7 +339,6 @@ void GpioInit(void)
     GpioPinConfig(ADC_CHANNEL6_CHANNEL_SW_A2_PORT,ADC_CHANNEL6_CHANNEL_SW_A2_PIN,GPIO_output);
     GpioPinConfig(TEMPERATURE_PORT,TEMPERATURE_PIN,GPIO_input);
     
-   // GpioPinConfig(UART1_485_DIRECT_CTRL_PORT,UART1_485_DIRECT_CTRL_PIN,GPIO_output);
     
    GpioPinConfig(MOTOR_EN_PORT,MOTOR_EN_PIN,GPIO_output);// ???
    GpioPinConfig(MOTOR_PLUSE_PORT,MOTOR_PLUSE_PIN,GPIO_output);

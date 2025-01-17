@@ -1,8 +1,9 @@
 /* 
  * File:   main.c
  * Author: cheng
- *
  * Created on July 29, 2024, 10:58 AM
+ * Last modified date：2025.1.17 
+ * Please indicate the date in the comments for modification
  */
 #include <p30f6014A.h>
 #include <stdio.h>
@@ -48,14 +49,14 @@
 
 int main() 
 {
-    init();                              //initialization
+    init();                              //initialization 初始化
     while(1)
     { 
-    	asm("CLRWDT");
+    	asm("CLRWDT");                  
         
-        collection();                   //collection circulate
-        cmdpoll();                      //command polling
-        DataUpload();                  //collection data upload
+        collection();                   //collection circulate  井下参数采集
+        cmdpoll();                      //command polling       指令接收
+        DataUpload();                  //collection data upload 数据上传
     }
 }
 

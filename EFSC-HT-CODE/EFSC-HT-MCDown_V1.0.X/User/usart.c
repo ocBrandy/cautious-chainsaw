@@ -8,20 +8,20 @@
 void UsartInit(void)
 {
     //***************************uart2(communication)***************3************	
-	U2MODE = 0x8000;				//UARTEN=1,??????????8??????
+	U2MODE = 0x8000;				//UARTEN=1,串口2复用使能
 	U2STA = 0x8000;					//UTXISEL=1,UTXEN=0,URXISEL0=0,RXISEL1=0
-	U2BRG = 0x000C;					//BAUD RATE 19.2KHz   (???=4M/(16*9.6K)-1)
-	IPC6 =  0X0007;					//UART2?????????
-	_U2TXIE =0;						//??????
-	_U2RXIE =1;						//Enable????
-	U2STAbits.UTXEN = 1;				//????	
+	U2BRG = 0x000C;					//BAUD RATE 19.2KHz   (波特率 = 4M/(16*19200)-1)
+	IPC6 =  0x0007;					//UART2 Receiver Interrupt is priority 7
+	_U2TXIE =0;						//TX中断关闭
+	_U2RXIE =1;						//RX中断打开
+	U2STAbits.UTXEN = 1;			
 //***************************uart1(log)***************************
-	U1MODE = 0x8000;				//UARTEN=1,??????????8??????
+	U1MODE = 0x8000;				//UARTEN=1,串口2复用使能
 	U1STA = 0x8000;					//UTXISEL=1,UTXEN=0,URXISEL0=0,RXISEL1=0
-	U1BRG = 0x000C;					//BAUD RATE 19.2KHz
-	_U1TXIE =0;						//??????
-	_U1RXIE = 0;						//Enable????
-	U1STAbits.UTXEN = 1;					//????
+	U1BRG = 0x000C;					//BAUD RATE 19.2KHz   (波特率 = 4M/(16*19200)-1)
+	_U1TXIE =0;						//TX中断关闭
+	_U1RXIE = 0;					//RX中断关闭
+	U1STAbits.UTXEN = 1;			
 }
 unsigned char uart_rx = 0;
 unsigned char cmdbuf[4];
@@ -112,9 +112,10 @@ void cmdpoll(void)
 }
 void ComSendBuf(unsigned char com,unsigned char *data,unsigned int len)
 {
+    unsigned int i,y;
     if(com == 0x01)
     {
-        for(unsigned i=0;i<len;i++)
+        for( i=0;i<len;i++)
         {   
             U1TXREG = data[i];
             while(!U1STAbits.TRMT); 
@@ -122,9 +123,9 @@ void ComSendBuf(unsigned char com,unsigned char *data,unsigned int len)
     }
     if(com == 0x02)
     {
-        for(unsigned i=0;i<len;i++)
+        for( y=0;y<len;y++)
         {   
-            U2TXREG = data[i];
+            U2TXREG = data[y];
             while(!U2STAbits.TRMT); 
         }
     }

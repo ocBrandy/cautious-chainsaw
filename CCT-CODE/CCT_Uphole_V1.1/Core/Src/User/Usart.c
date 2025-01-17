@@ -502,10 +502,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)		//串口中断回调函
 				break;
 			case 14:
 				ETHdatabuf[ETHdataheadnum++] = Uart1_RxBuff[0];
-				Reserve = (Reserve << 8) + Uart1_RxBuff[0];
+				Reserve = (Reserve << 8) + Uart1_RxBuff[0];							//预留
 				ETHdatastate++;
 				break;
 			case 15:
+				if(Workmode == DEACTIVE)											//服务表反激活没有包体，只有包头
+				{
+					ETHdatabuf[ETHdataheadnum++] = Uart1_RxBuff[0];
+					ETH_Checksum = Uart1_RxBuff[0];
+					ETHdatastate = 17;
+				}
 				ETHdatabuf[ETHdataheadnum++] = Uart1_RxBuff[0];
 				ETHbodybuf[ETHdatabodynum++] = Uart1_RxBuff[0];
 				if(ETHdatabodynum >= ETHdatalen)
@@ -712,10 +718,10 @@ void Downdatasend (unsigned char type)
 	Downdataloadbuf[7] = Tooladdress;
 	Downdataloadbuf[8] = Subsetnumber>>8;
 	Downdataloadbuf[9] = Subsetnumber;							//subset号，若为命令返回参数则为命令字
-	Downdataloadbuf[10] = Report_Timestamp>>24;
-	Downdataloadbuf[11] = Report_Timestamp>>16;
-	Downdataloadbuf[12] = Report_Timestamp>>8;
-	Downdataloadbuf[13] = Report_Timestamp;						//时间标
+	Downdataloadbuf[10] = Report_Timestamp;
+	Downdataloadbuf[11] = Report_Timestamp>>8;
+	Downdataloadbuf[12] = Report_Timestamp>>16;
+	Downdataloadbuf[13] = Report_Timestamp>>24;					//时间标
 	Downdataloadbuf[14] = 0x00;
 	Downdataloadbuf[15] = 0x00;									//超时时间,井下仪器控制命令超时时间，暂时没有返回
 	Downdataloadbuf[16] = type;									//超时or数据

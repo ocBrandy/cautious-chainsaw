@@ -1,0 +1,3 @@
+../Core/Src/User/Passthrough.c:30:6:ETH_CMDPOLL	16	static
+../Core/Src/User/Passthrough.c:103:6:DOWN_DATAPOLL	8	static
+../Core/Src/User/Passthrough.c:120:6:Sendtimestamp	8	static

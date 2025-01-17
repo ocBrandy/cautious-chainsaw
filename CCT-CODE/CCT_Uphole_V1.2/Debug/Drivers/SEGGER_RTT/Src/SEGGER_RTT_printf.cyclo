@@ -1,0 +1,5 @@
+../Drivers/SEGGER_RTT/Src/SEGGER_RTT_printf.c:122:13:_StoreChar	4
+../Drivers/SEGGER_RTT/Src/SEGGER_RTT_printf.c:147:13:_PrintUnsigned	20
+../Drivers/SEGGER_RTT/Src/SEGGER_RTT_printf.c:237:13:_PrintInt	25
+../Drivers/SEGGER_RTT/Src/SEGGER_RTT_printf.c:332:5:SEGGER_RTT_vprintf	30
+../Drivers/SEGGER_RTT/Src/SEGGER_RTT_printf.c:506:5:SEGGER_RTT_printf	1

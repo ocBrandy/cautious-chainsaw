@@ -40,23 +40,23 @@ void collection (void)
         if(Tempselcnt == 0)
         {
             Adc_Channel_SW(6);                 
-            Adc_Channel6_Channel_SW(1);       //stepping motor temp
-            steppingmotortemp = GetTemperature(2);//channel 2 PT1000
+            Adc_Channel6_Channel_SW(1);       //stepping motor temp     步进电机驱动温度
+            steppingmotortemp = GetTemperature(2);//channel 2 PT1000    通道2 传感器为PT1000
             DataUpBuf[11] = steppingmotortemp;
             Tempselcnt++;
         }
         else if(Tempselcnt == 1)
         {
             Adc_Channel_SW(6);
-            Adc_Channel6_Channel_SW(2);       //3981 temp
-            Ten7538temp = GetTemperature(5);   //channel 5 PT500
+            Adc_Channel6_Channel_SW(2);       //3981 temp               3981温度 张力短节温度 
+            Ten7538temp = GetTemperature(5);   //channel 5 PT500        通道5 传感器为PT500
             DataUpBuf[12] = Ten7538temp;
             Tempselcnt++;
         }
         else if(Tempselcnt == 2)
         {
             Adc_Channel_SW(6);
-            Adc_Channel6_Channel_SW(3);       //Power temp
+            Adc_Channel6_Channel_SW(3);       //Power temp              井下电源温度
             Powertemp = GetTemperature(2);
             DataUpBuf[13] = Powertemp;
             Tempselcnt++;
@@ -64,7 +64,7 @@ void collection (void)
         else if(Tempselcnt == 3)
         {
             Adc_Channel_SW(6);
-            Adc_Channel6_Channel_SW(4);       //LMotor temp
+            Adc_Channel6_Channel_SW(4);       //LMotor temp             交流电机温度
             Lmotortemp = GetTemperature(2);
             DataUpBuf[14] = Lmotortemp;
             Tempselcnt++;
@@ -72,58 +72,60 @@ void collection (void)
         else if(Tempselcnt == 4)
         {
             Adc_Channel_SW(6);
-            Adc_Channel6_Channel_SW(5);       //Pump oil temp
+            Adc_Channel6_Channel_SW(5);       //Pump oil temp           泵液压油温度
             Pumpoiltemp = GetTemperature(2);
             DataUpBuf[15] = Pumpoiltemp;
             Tempselcnt = 0;
         }
 
-        Adc_Channel_SW(1);                      //Cable head AC voltage
+        Adc_Channel_SW(1);                    //Cable head AC voltage   缆头交流电压
         CableheadVoltage = GetCableHeadVoltage();
         DataUpBuf[5] = CableheadVoltage>>8;
         DataUpBuf[4] = CableheadVoltage;
 
-        Adc_Channel_SW(3);                      //Tension
+        Adc_Channel_SW(3);                      //Tension               3819张力采集
         Tension = Get_Tension();
         DataUpBuf[7] = Tension>>8;
         DataUpBuf[6] = Tension;
        // TenOrMotorAC = 1;
 
-        Adc_Channel_SW(5);                      //Cable head AC voltage
+        Adc_Channel_SW(5);                      //Motor AC voltage      电机交流电压采集
         LMotorVoltage = GetLMotorAcVoltage();
         DataUpBuf[10] = LMotorVoltage>>8;
         DataUpBuf[9] = LMotorVoltage;
         //TenOrMotorAC = 0;
         
         Adc_Channel_SW(6);
-        Adc_Channel6_Channel_SW(6);           //Pushing pressure
+        Adc_Channel6_Channel_SW(6);           //Pushing pressure        推靠压力采集
         Pushingpressure = Get_PumpPressure();
         DataUpBuf[17] = Pushingpressure>>8;
         DataUpBuf[16] = Pushingpressure;
+        ComSendChar(1,DataUpBuf[17]);
+        ComSendChar(1,DataUpBuf[18]);
 
         Adc_Channel_SW(6);
-        Adc_Channel6_Channel_SW(7);           //Large Pump pressure
+        Adc_Channel6_Channel_SW(7);           //Large Pump pressure     大泵压力采集
         LPumppressure = Get_PumpPressure();
         DataUpBuf[19] = LPumppressure>>8;
         DataUpBuf[18] = LPumppressure;
 
         Adc_Channel_SW(6);
-        Adc_Channel6_Channel_SW(8);           //Small Pump pressure
+        Adc_Channel6_Channel_SW(8);           //Small Pump pressure     小泵压力采集
         SPumppressure = Get_PumpPressure();
         DataUpBuf[21] = SPumppressure>>8;
         DataUpBuf[20] = SPumppressure;
 
         
         //delay_us(1000);
-        Adc_Channel_SW(4);                     //Drilling displacement
+        Adc_Channel_SW(4);                     //Drilling displacement  钻进位移采集
         Drilling = Get_Displacement(0);
         DataUpBuf[8] = Drilling;
 
-        Adc_Channel_SW(7);                     //heart length displacement
+        Adc_Channel_SW(7);                     //heart length displacement  心长位移采集
         Heartlength = Get_Displacement(1);
         DataUpBuf[22] = Heartlength;
 
-        Adc_Channel_SW(8);                     //oil level displacement
+        Adc_Channel_SW(8);                     //oil level displacement     油位位移采集
         Oillevel = Get_Displacement(2);
         //DataUpBuf[24] = 0xff;
         DataUpBuf[24] = Oillevel>>8;
@@ -222,11 +224,11 @@ static int CalculateTemperature(float fR,unsigned char sel)
         int fTem;
         unsigned int Lefsel, Rigsel;
         
-    if(sel == 5)                                //pt500 sel
+    if(sel == 5)                                //pt500 sel  PT500传感器通道
     { 
         Lefsel = 0; 
         Rigsel = 459;
-        while(Rigsel - Lefsel >1)                 // Dichotomy
+        while(Rigsel - Lefsel >1)                 //Dichotomy  二分法查温度表
         {
             int mid = (Lefsel + Rigsel)>>1;
             
@@ -251,7 +253,7 @@ static int CalculateTemperature(float fR,unsigned char sel)
     {
         Lefsel = 0; 
         Rigsel = 259;
-        while(Rigsel - Lefsel > 1)                 // Dichotomy
+        while(Rigsel - Lefsel > 1)                 // Dichotomy 二分法查温度表
         {
             int mid = (Lefsel + Rigsel)>>1;
             
@@ -314,15 +316,15 @@ unsigned char GetTemperature(unsigned char sel)
 	}
 	sum = sum >> 4;
     
-    if(sel == 5)                                //PT500 sel
+    if(sel == 5)                                //PT500 sel PT500传感器通道
     {
         negative_in_x_500 = 927;
 
         output_x_1000 = sum;
         output_x_1000 *= 5000;
-        output_x_1000 = output_x_1000>>16 ;     //reality voltage
+        output_x_1000 = output_x_1000>>16 ;     //reality voltage       转化为实际电压
         
-        mV_mul = output_x_1000/6.86;            //ad8227 gain
+        mV_mul = output_x_1000/6.86;            //ad8227 gain           AD8227增益
         mV_mul += negative_in_x_500;
 
         if(mV_mul > A_plus_10_mV) {return ERROR_TEMPERATURE;}
@@ -424,18 +426,18 @@ int GetCableHeadVoltage(void)
     for(x = 0;x < 100;x ++)
 	{
 		cur_adc0[x] = ads8320();
-        delay_us(74);                      //sampling rate 200us
+        delay_us(74);                      //sampling rate 200us        采样率为200us
 	}
     for(y=0;y<100;y++)
     {
 		cur_adc0[y] = cur_adc0[y] * 5000;
-		cur_adc0[y] = cur_adc0[y] >> 16;    //reality voltage
+		cur_adc0[y] = cur_adc0[y] >> 16;    //reality voltage           实际电压
         
         sqr0 = cur_adc0[y] * cur_adc0[y];
         Sum_2 += sqr0;
     }
     Sum_2 = Sum_2 / 100;
-    Sum_2 = sqrt(Sum_2);                   //root-mean-square
+    Sum_2 = sqrt(Sum_2);                   //root-mean-square           均方根
     Sum_2 = Sum_2 * 0.98333;
     temp_value = Sum_2;
     return (unsigned int)temp_value;
@@ -461,10 +463,10 @@ unsigned int GetLMotorAcVoltage(void)
     unsigned int acqpoint;
     
         delay_us(1000);
-    for(x = 0;x < 250;x ++)     //80ms 15Hz-55Hz
+    for(x = 0;x < 250;x ++)     //80ms 15Hz-55Hz                采样周期为80ms  采样频率15-55Hz
 	{
 		cur_adc[x] = ads8320();
-        delay_us(195);      //sampling rate 320us
+        delay_us(195);      //sampling rate 320us               采样率为320us
     } 
     for(y = 0;y < 250;y ++)
     {
@@ -477,7 +479,7 @@ unsigned int GetLMotorAcVoltage(void)
             max = cur_adc[y];
         }
     }
-    mid = (min + max)>>1;   //Center level
+    mid = (min + max)>>1;   //Center level                      门限电平
     
     for(z = 0;z < 250;z ++)
     {
@@ -500,7 +502,7 @@ unsigned int GetLMotorAcVoltage(void)
         acqpoint = pointcnt*2;
         temp = 250/acqpoint;
         acqpoint = acqpoint*temp;
-      if(pointcnt > 250)      //less than 12Hz
+      if(pointcnt > 250)      //less than 12Hz              小于12Hz直接采250个点做均方根
       {
           acqpoint = 250;
           for(b=0;b<acqpoint;b++)
@@ -568,10 +570,10 @@ int Get_Tension(void)
     unsigned long asum = 0;
     long sum=0;
     int zl = 0;
-    
+    unsigned char i;
     for(m = 0;m < 10;m ++);
 	sum = 0;
-    for(unsigned char i=0;i<64;i++)
+    for( i=0;i<64;i++)
     {
         n = ads8320();
         sum+=n;
@@ -646,7 +648,8 @@ int Get_Displacement(unsigned char sel)
 int Checksum (unsigned char *p,unsigned char len)
 {
     unsigned int sum = 0;
-    for(unsigned i=0;i<len;i++)
+    unsigned int i;
+    for(i=0;i<len;i++)
     {
         sum+=p[i];
         //ComSendChar(2,p[i]);

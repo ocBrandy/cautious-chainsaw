@@ -109,6 +109,7 @@ extern unsigned char DOWNdatabuf[256];
 extern unsigned char DOWNdatastate;
 extern unsigned char DOWNheaddatanum;
 extern unsigned char DOWNdatabodynum;
+_Bool OVERTIME;
 void DOWN_DATAPOLL(void)
 {
 	if(DOWNdataoverflag == 1 && Downdatatimeoutnum <= Delaytime	)	//数据接收完毕且切在上位机允许的时间范围内
@@ -119,7 +120,6 @@ void DOWN_DATAPOLL(void)
 	else if(Sertableactflag == 1 && Downdatatimeoutnum > Delaytime)	//无数据或数据接收完毕但超出上位机允许的时间范围
 	{
 		Downdatasend(TIMEOUT);
-		Downdatatimeoutnum = 0;
 		Resetstate(TOOLDATA);
 	}
 }
